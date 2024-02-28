@@ -5,11 +5,9 @@ const UserFormsList = ({ token }) => {
   const [decodedTokenUserName, setDecodedTokenUserName] = useState(null);
 
   useEffect(() => {
-    // Kullanıcı adını token'dan al
     const decodedToken = JSON.parse(atob(token.split('.')[1]));
     setDecodedTokenUserName(decodedToken.username);
 
-    // Form listesini API'den al
     const fetchForms = async () => {
       try {
         const response = await fetch(`https://localhost:7028/api/Forms/GetByUsernameForms?username=${decodedTokenUserName}`, {
@@ -19,7 +17,6 @@ const UserFormsList = ({ token }) => {
             'Authorization': `Bearer ${token}`
           },
         });
-       
         if (!response.ok) {
           throw new Error('Veri çekilemedi.');
         }
@@ -31,7 +28,7 @@ const UserFormsList = ({ token }) => {
     };
 
     fetchForms();
-  }, [token]);
+  }, [token,forms]);
  
   return (
     <div>

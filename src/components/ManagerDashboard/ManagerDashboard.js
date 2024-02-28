@@ -1,13 +1,13 @@
 
 
 import React from 'react';
+import FormsList from '../FormsList/FormsList';
 
-const ManagerDashboard = () => {
+const ManagerDashboard = ({ token }) => {
   return (
     <div>
       <h1>Manager Dashboard</h1>
-      <p>Welcome to Manager Dashboard</p>
-      {/* Buraya manager için diğer bileşenler veya içerikler eklenebilir */}
+      <FormsList token={token}  />
     </div>
   );
 };

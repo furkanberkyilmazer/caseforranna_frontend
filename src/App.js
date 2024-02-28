@@ -6,20 +6,19 @@ import ManagerDashboard from './components/ManagerDashboard/ManagerDashboard';
 import CustomerDashboard from './components/CustomerDashboard/CustomerDashboard';
 import { jwtDecode } from 'jwt-decode';
 import { Redirect } from 'react-router-dom/cjs/react-router-dom.min';
+import Register from './components/Register/Register';
 
 const App = () => {
   const [token, setToken] = useState('');
   const [role, setRole] = useState('');
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    // Token durumunu kontrol et
     const storedToken = localStorage.getItem('token');
-    //const storedToken = token;  //local storage da tutmak istemezsen
     console.log('str:'+storedToken);
 
     if (storedToken) {
       setToken(storedToken);
-      // Token varsa, decode ederek rol bilgisini al
       const decodedToken = JSON.parse(atob(storedToken.split('.')[1])); // Base64 decode
       setRole(decodedToken.role.toLowerCase());
     }
@@ -28,29 +27,25 @@ const App = () => {
 
   let content;
   if (token) {
-    // Token varsa, role'e göre uygun bileşeni göster
     if (role === 'manager') {
       content = <ManagerDashboard token={token}/>;
     } else if (role === 'customer') {
       content = <CustomerDashboard token={token}/>;
     } else {
-      // Rol belirlenemiyorsa veya bilinmeyen bir rol varsa hata mesajı göster
       content = <div>Unknown role</div>;
     }
   } else {
-    // Token yoksa, giriş formunu göster
     content = <LoginForm  setToken={setToken} />;
   }
 
   return (
     <div>
-    <Navbar token={token} setToken={setToken} />
+    <Navbar token={token} setToken={setToken}  setSelected={setSelected} />
     {token ? (
-      // Token varsa, role'e göre uygun bileşeni göster
       role === 'manager' ? <ManagerDashboard token={token}/> : <CustomerDashboard token={token}/>
     ) : (
-      // Token yoksa, giriş formunu göster
-      <LoginForm setToken={setToken} />
+      selected === 'Login' || selected === null? 
+      <LoginForm setToken={setToken} />:<Register selected={selected}/>
     )}
   </div>
   );
